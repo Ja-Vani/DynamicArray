@@ -51,6 +51,8 @@ public:
     other.data_ = nullptr;
     this->size_ = other.size_;
     this->capacity_ = other.capacity_;
+    other.capacity_ = 0;
+    other.size_ = 0;
   }
 
   MyArray &operator=(MyArray &&other) {
@@ -59,6 +61,8 @@ public:
     other.data_ = nullptr;
     this->size_ = other.size_;
     this->capacity_ = other.capacity_;
+    other.capacity_ = 0;
+    other.size_ = 0;
     return *this;
   }
 
@@ -74,19 +78,19 @@ public:
     if (size_ < capacity_) {
       T next = value;
       for (int i = index; i <= size_; i++) {
-        T temp = this->data_[i];
-        this->data_[i] = next;
-        next = temp;
+        T temp = std::move(this->data_[i]);
+        data_[i] = std::move(next);
+        next = std::move(temp);
       }
     } else {
       capacity_ *= 2;
       T *newData = (T *) malloc(capacity_ * sizeof(T));
       for (int i = 0; i < index; i++) {
-        newData[i] = this->data_[i];
+        newData[i] = std::move(this->data_[i]);
       }
       newData[index] = value;
       for (int i = index + 1; i <= size_; i++) {
-        newData[i] = this->data_[i - 1];
+        newData[i] = std::move(this->data_[i - 1]);
       }
       for (int i = 0; i < this->size_; i++)
         data_[i].~T();
