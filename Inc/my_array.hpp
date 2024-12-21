@@ -36,6 +36,7 @@ public:
   }
 
   MyArray &operator=(const MyArray &other) {
+    if (this == &other) return *this;
     this->data_ = (T *) malloc(other.capacity_ * sizeof(T));
     for (int i = 0; i < other.size(); i++) {
       this->data_[i] = other.data_[i];
@@ -53,6 +54,7 @@ public:
   }
 
   MyArray &operator=(MyArray &&other) {
+    if (this == &other) return *this;
     this->data_ = other.data_;
     other.data_ = nullptr;
     this->size_ = other.size_;
